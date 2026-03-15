@@ -1,37 +1,45 @@
 from flask import Flask, render_template, request, send_file
-from docx import Document
+import openpyxl
 import os
-import re
 import zipfile
+import re
 
 app = Flask(__name__)
 
-TEMPLATE_FOLDER = "doc_templates"
+TEMPLATE_FOLDER = "excel_templates"
 OUTPUT_FOLDER = "output"
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 
 # =========================
-# 提取变量
+# 扫描Excel模板变量
 # =========================
-
 def get_variables():
 
     variables = set()
 
     for file in os.listdir(TEMPLATE_FOLDER):
 
-        if file.endswith(".docx"):
+        if file.endswith(".xlsx"):
 
-            doc = Document(os.path.join(TEMPLATE_FOLDER, file))
+            path = os.path.join(TEMPLATE_FOLDER, file)
 
-            for p in doc.paragraphs:
+            wb = openpyxl.load_workbook(path)
 
-                found = re.findall(r"\{\{(.*?)\}\}", p.text)
+            sheet = wb.active
 
-                for f in found:
-                    variables.add(f)
+            for row in sheet.iter_rows():
+
+                for cell in row:
+
+                    if cell.value:
+
+                        found = re.findall(r"\{\{(.*?)\}\}", str(cell.value))
+
+                        for f in found:
+
+                            variables.add(f)
 
     return list(variables)
 
@@ -39,7 +47,6 @@ def get_variables():
 # =========================
 # 首页
 # =========================
-
 @app.route("/")
 def index():
 
@@ -49,9 +56,8 @@ def index():
 
 
 # =========================
-# 生成文件
+# 生成Excel文件
 # =========================
-
 @app.route("/generate", methods=["POST"])
 def generate():
 
@@ -61,22 +67,30 @@ def generate():
 
     for template in os.listdir(TEMPLATE_FOLDER):
 
-        if not template.endswith(".docx"):
+        if not template.endswith(".xlsx"):
             continue
 
-        doc = Document(os.path.join(TEMPLATE_FOLDER, template))
+        template_path = os.path.join(TEMPLATE_FOLDER, template)
 
-        for p in doc.paragraphs:
+        wb = openpyxl.load_workbook(template_path)
 
-            for k,v in data.items():
+        sheet = wb.active
 
-                p.text = p.text.replace("{{"+k+"}}", v)
+        for row in sheet.iter_rows():
 
-        output_file = os.path.join(OUTPUT_FOLDER, template)
+            for cell in row:
 
-        doc.save(output_file)
+                if cell.value:
 
-        generated_files.append(output_file)
+                    for key, value in data.items():
+
+                        cell.value = str(cell.value).replace("{{"+key+"}}", value)
+
+        output_path = os.path.join(OUTPUT_FOLDER, template)
+
+        wb.save(output_path)
+
+        generated_files.append(output_path)
 
 
     # 打包ZIP
@@ -91,7 +105,11 @@ def generate():
     return send_file(zip_path, as_attachment=True)
 
 
+# =========================
+# 启动程序（Render必须）
+# =========================
 if __name__ == "__main__":
-    import os
+
     port = int(os.environ.get("PORT", 10000))
+
     app.run(host="0.0.0.0", port=port)

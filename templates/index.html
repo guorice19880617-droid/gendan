@@ -1,1 +1,19 @@
+<h2>填写项目信息</h2>
 
+<form action="/generate" method="post">
+
+{% for v in variables %}
+
+<label>{{v}}</label>
+
+<br>
+
+<input name="{{v}}" required>
+
+<br><br>
+
+{% endfor %}
+
+<button type="submit">生成全部单据</button>
+
+</form>

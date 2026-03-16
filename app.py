@@ -57,7 +57,10 @@ invoice_map = {
         "bank": "宁波银行月湖支行22020122000019594"
     }
 }
+@app.route("/generate", methods=["POST"])
+def generate():
 
+    form_data = request.form.to_dict()
 title = form_data.get("title")
 
 if title in invoice_map:

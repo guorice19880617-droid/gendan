@@ -55,7 +55,11 @@ font-size:16px;
 
 {% else %}
 
+{% if v in ["name","tax","address","bank"] %}
+<input name="{{v}}" readonly>
+{% else %}
 <input name="{{v}}" required>
+{% endif %}
 
 {% endif %}
 

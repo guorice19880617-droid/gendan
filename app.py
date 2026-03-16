@@ -76,12 +76,12 @@ def generate():
 
     data = request.form.to_dict()
 
-    title = form_data.get("title")
+    title = data.get("title")
     if title in invoice_map:
-        form_data["name"] = invoice_map[title]["name"]
-        form_data["tax"] = invoice_map[title]["tax"]
-        form_data["address"] = invoice_map[title]["address"]
-        form_data["bank"] = invoice_map[title]["bank"]
+        data["name"] = invoice_map[title]["name"]
+        data["tax"] = invoice_map[title]["tax"]
+        data["address"] = invoice_map[title]["address"]
+        data["bank"] = invoice_map[title]["bank"]
 
     generated_files = []
 

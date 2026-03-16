@@ -60,10 +60,10 @@ invoice_map = {
 @app.route("/generate", methods=["POST"])
 def generate():
 
-    form_data = request.form.to_dict()
-title = form_data.get("title")
+ form_data = request.form.to_dict()
+ title = form_data.get("title")
 
-if title in invoice_map:
+ if title in invoice_map:
     form_data["name"] = invoice_map[title]["name"]
     form_data["tax"] = invoice_map[title]["tax"]
     form_data["address"] = invoice_map[title]["address"]

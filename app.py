@@ -42,21 +42,30 @@ def get_variables():
                             variables.add(f)
 
     return list(variables)
-    
+
+
+# =========================
+# 发票信息自动填充
+# =========================
 invoice_map = {
+
     "海田控股": {
         "name": "宁波海田控股集团有限公司",
         "tax": "330204567041225",
         "address": "会展路181号宁波国际贸易展览中心87349429",
         "bank": "交通银行宁波市分行332006271018010103062"
     },
+
     "大洲进出口": {
         "name": "宁波大洲进出口有限公司",
         "tax": "91330203768515570K",
         "address": "宁波市海曙区粮丰街吴黄1幢1-31室0574-87369425",
         "bank": "宁波银行月湖支行22020122000019594"
     }
+
 }
+
+
 # =========================
 # 首页
 # =========================
@@ -76,8 +85,15 @@ def generate():
 
     data = request.form.to_dict()
 
+    # 允许空字段
+    data.setdefault("name","")
+    data.setdefault("Bill of Lading Number","")
+
+    # 自动填充发票信息
     title = data.get("title")
+
     if title in invoice_map:
+
         data["name"] = invoice_map[title]["name"]
         data["tax"] = invoice_map[title]["tax"]
         data["address"] = invoice_map[title]["address"]
@@ -113,8 +129,10 @@ def generate():
         generated_files.append(output_path)
 
 
-    # 打包ZIP
-    zip_path = os.path.join(OUTPUT_FOLDER, "documents.zip")
+    # ZIP文件名 = Contract No.
+    contract_no = data.get("Contract No.", "documents")
+
+    zip_path = os.path.join(OUTPUT_FOLDER, f"{contract_no}.zip")
 
     with zipfile.ZipFile(zip_path, "w") as zipf:
 
@@ -126,7 +144,7 @@ def generate():
 
 
 # =========================
-# 启动程序（Render必须）
+# Render启动
 # =========================
 if __name__ == "__main__":
 

@@ -42,8 +42,34 @@ def get_variables():
                             variables.add(f)
 
     return list(variables)
+    
+invoice_map = {
+    "海田控股": {
+        "name": "宁波海田控股集团有限公司",
+        "tax": "330204567041225",
+        "address": "会展路181号宁波国际贸易展览中心
+87349429",
+        "bank": "交通银行宁波市分行
+332006271018010103062"
+    },
+    "大洲进出口": {
+        "name": "宁波大洲进出口有限公司",
+        "tax": "91330203768515570K",
+        "address": "宁波市海曙区粮丰街吴黄1幢1-31室
+0574-87369425",
+        "bank": "宁波银行月湖支行
+22020122000019594"
+    }
+}
 
+title = form_data.get("title")
 
+if title in invoice_map:
+    form_data["name"] = invoice_map[title]["name"]
+    form_data["tax"] = invoice_map[title]["tax"]
+    form_data["address"] = invoice_map[title]["address"]
+    form_data["bank"] = invoice_map[title]["bank"]
+    
 # =========================
 # 首页
 # =========================

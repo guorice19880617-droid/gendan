@@ -57,18 +57,6 @@ invoice_map = {
         "bank": "宁波银行月湖支行22020122000019594"
     }
 }
-@app.route("/generate", methods=["POST"])
-def generate():
-
- form_data = request.form.to_dict()
- title = form_data.get("title")
-
- if title in invoice_map:
-    form_data["name"] = invoice_map[title]["name"]
-    form_data["tax"] = invoice_map[title]["tax"]
-    form_data["address"] = invoice_map[title]["address"]
-    form_data["bank"] = invoice_map[title]["bank"]
-    
 # =========================
 # 首页
 # =========================
@@ -87,6 +75,13 @@ def index():
 def generate():
 
     data = request.form.to_dict()
+
+    title = form_data.get("title")
+    if title in invoice_map:
+        form_data["name"] = invoice_map[title]["name"]
+        form_data["tax"] = invoice_map[title]["tax"]
+        form_data["address"] = invoice_map[title]["address"]
+        form_data["bank"] = invoice_map[title]["bank"]
 
     generated_files = []
 

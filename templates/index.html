@@ -42,27 +42,45 @@ font-size:16px;
 <form action="/generate" method="post">
 
 {% set labels = {
+
 "title":"抬头",
+
 "Contract No.":"代理合同号",
+
 "importing country":"进口国",
+
 "port of destination":"目的港",
+
 "terms":"条款",
-"commodity":"品名",  
+
+"commodity":"品名",
+
 "quantity":"数量",
-"unit price":"单价/usd",
+
+"unit price":"单价 USD",
+
 "Payment method":"付款方式",
-"Proxy client":"开票单位" ,
+
+"Proxy client":"开票单位",
+
 "Registration Number":"纳税人登记号",
+
 "address":"开票地址电话",
+
 "bank of deposit":"开户银行",
-"account":"开票账号" ,
+
+"account":"开票账号",
+
 "customs declaration":"报关公司",
-"Bill of Lading Number":"提单号",
+
+"Bill of Lading Number":"提单号（可不填）"
+
 } %}
+
 
 {% for v in variables %}
 
-{% if v not in ["tax","address","bank"] %}
+{% if v not in ["tax","address","bank","name"] %}
 
 <label>
 
@@ -75,10 +93,16 @@ font-size:16px;
 <select name="title" required>
 
 <option value="">请选择抬头</option>
-<option value="控股">控股</option>
-<option value="进出口">进出口</option>
+
+<option value="海田控股">海田控股</option>
+
+<option value="大洲进出口">大洲进出口</option>
 
 </select>
+
+{% elif v == "Bill of Lading Number" %}
+
+<input name="{{v}}" placeholder="请输入{{ labels.get(v,v) }}">
 
 {% else %}
 

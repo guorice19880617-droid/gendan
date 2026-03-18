@@ -82,7 +82,7 @@ font-size:16px;
 
 {% for v in variables %}
 
-{% if v not in ["tax","address","bank"] %}
+{% if v not in ["tax","address","bank","name"] %}
 
 <label>{{ labels.get(v,v) }}</label>
 
@@ -90,8 +90,8 @@ font-size:16px;
 
 <select name="title" required>
 <option value="">请选择抬头</option>
-<option value="控股">控股</option>
-<option value="进出口">进出口</option>
+<option value="控股">海田控股</option>
+<option value="进出口">大洲进出口</option>
 </select>
 
 {% else %}

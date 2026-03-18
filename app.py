@@ -87,7 +87,6 @@ def generate():
 
     # 允许空字段
     data.setdefault("name","")
-    data.setdefault("Bill of Lading Number","")
 
     # 自动填充发票信息
     title = data.get("title")

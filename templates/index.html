@@ -78,35 +78,29 @@ font-size:16px;
 } %}
 
 
+{% set optional_fields = ["customs_declaration","bill_of_lading_number"] %}
+
 {% for v in variables %}
 
-{% if v not in ["tax","address","bank","name"] %}
+{% if v not in ["tax","address","bank"] %}
 
-<label>
-
-{{ labels.get(v,v) }}
-
-</label>
+<label>{{ labels.get(v,v) }}</label>
 
 {% if v == "title" %}
 
 <select name="title" required>
-
 <option value="">请选择抬头</option>
-
-<option value="海田控股">海田控股</option>
-
-<option value="大洲进出口">大洲进出口</option>
-
+<option value="控股">控股</option>
+<option value="进出口">进出口</option>
 </select>
-
-{% elif v == "Bill of Lading Number" %}
-
-<input name="{{v}}" placeholder="请输入{{ labels.get(v,v) }}">
 
 {% else %}
 
-<input name="{{v}}" placeholder="请输入{{ labels.get(v,v) }}" required>
+{% if v in optional_fields %}
+<input name="{{v}}" placeholder="可不填">
+{% else %}
+<input name="{{v}}" required placeholder="请输入{{ labels.get(v,v) }}">
+{% endif %}
 
 {% endif %}
 

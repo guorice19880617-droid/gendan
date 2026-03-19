@@ -129,9 +129,9 @@ def generate():
 
 
     # ZIP文件名 = Contract_No.
-    contract_no = data.get("Contract_No.", "documents")
+    contract_no = data.get("Contract_No", "documents")
 
-    zip_path = os.path.join(OUTPUT_FOLDER, f"{ ontract_no}.zip")
+    zip_path = os.path.join(OUTPUT_FOLDER, f"{ontract_no}.zip")
 
     with zipfile.ZipFile(zip_path, "w") as zipf:
 
